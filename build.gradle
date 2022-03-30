@@ -1,0 +1,112 @@
+apply plugin: 'maven-publish'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+// Specify the JDK version and change it to the system version
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    maven {
+        allowInsecureProtocol = true
+        url "http://maven.aliyun.com/nexus/content/groups/public/"
+    }
+
+    maven { url "https://dl.bintray.com/ethereum/maven/" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+
+    mavenLocal()
+    mavenCentral()
+}
+
+def log4j_version="2.13.3"
+List log4j = [
+        "org.apache.logging.log4j:log4j-api:$log4j_version",
+        "org.apache.logging.log4j:log4j-core:$log4j_version",
+        "org.apache.logging.log4j:log4j-slf4j-impl:$log4j_version",
+        "org.apache.logging.log4j:log4j-web:$log4j_version"
+]
+
+List jaxb = [
+        "javax.xml.bind:jaxb-api:2.3.0",
+        "com.sun.xml.bind:jaxb-impl:2.3.0",
+        "com.sun.xml.bind:jaxb-core:2.3.0",
+        "javax.activation:activation:1.1.1"
+]
+
+def jackson_version = "2.11.0"
+List jackson = [
+        "com.fasterxml.jackson.core:jackson-databind:$jackson_version",
+        "com.fasterxml.jackson.core:jackson-annotations:$jackson_version",
+        "com.fasterxml.jackson.core:jackson-core:$jackson_version",
+        "com.fasterxml.jackson.module:jackson-module-parameter-names:$jackson_version",
+        "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jackson_version",
+        "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_version"
+]
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+    implementation log4j, jaxb, jackson
+
+    implementation("org.fisco-bcos:web3sdk:2.6.4")
+
+}
+
+configurations {
+    all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    all*.exclude group: 'log4j', module: 'log4j'
+    all*.exclude group: 'com.mchange', module: '*'
+    all*.exclude group: 'org.apache.commons', module: 'commons-collections4'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+        resources  {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
+jar {
+	destinationDir file('dist/apps')
+	archiveName project.name + '.jar'
+	exclude '**/*.xml'
+	exclude '**/*.properties'
+	exclude '**/*.jks'
+	exclude '**/*.crt'
+	exclude '**/*.key'
+
+	doLast {
+		copy {
+			from file('src/main/resources/')
+			into 'dist/conf'
+		}
+		copy {
+			from configurations.runtimeClasspath
+			into 'dist/lib'
+		}
+		copy {
+			from file('.').listFiles().findAll{File f -> (f.name.endsWith('.bat') || f.name.endsWith('.sh') || f.name.endsWith('.env'))}
+			into 'dist'
+		}
+		copy {
+			from file('src/main/executive/sol')
+			into 'dist/contracts'
+		}
+		copy {
+			from file('src/main/executive/shell')
+			into 'dist/bin'
+		}
+	}
+}
+
+task processPackageResources(type: Copy) {
+    duplicatesStrategy = 'include'
+}

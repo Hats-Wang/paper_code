@@ -3,7 +3,7 @@ import "./Credit.sol";
 
 contract CreditSignersData{
         address[] signers;
-		event newEvidenceEvent(address addr);
+		event newCreditEvent(address addr);
         function newCredit(string cre, string info,string id,uint8 v, bytes32 r,bytes32 s)public returns(address)
         {
             Credit credit = new Credit(cre, info, id, v, r, s, this, msg.sender);
