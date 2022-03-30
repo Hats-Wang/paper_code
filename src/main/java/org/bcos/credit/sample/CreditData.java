@@ -24,8 +24,8 @@ public class CreditData {
         return creditID;
     }
 
-    public void setCreditID(String evidenceID) {
-        this.creditID = evidenceID;
+    public void setCreditID(String creditID) {
+        this.creditID = creditID;
     }
 
     public List<String> getSignatures() {
@@ -48,8 +48,8 @@ public class CreditData {
         return creditInfo;
     }
 
-    public void setEvidenceInfo(String evidenceInfo) {
-        this.creditInfo = evidenceInfo;
+    public void setCreditInfo(String creditInfo) {
+        this.creditInfo = creditInfo;
     }
 
     public List<String> getPublicKeys() {

@@ -82,8 +82,8 @@ public class BcosApp {
 
 	}
 
-	//newEvidence
-	public Address newEvidence(String keyStoreFileName,String keyStorePassword, String keyPassword,String address,String evidenceId,String evidenceHash) throws Exception {
+	//newCredit
+	public Address newCredit(String keyStoreFileName,String keyStorePassword, String keyPassword,String address,String creditId,String creditHash) throws Exception {
 		Credentials credentials=loadkey(keyStoreFileName,keyStorePassword,keyPassword);
 		if(credentials==null){
 			return null;
@@ -94,19 +94,19 @@ public class BcosApp {
 		if (address != null) {
             creditSignersData = CreditSignersData.load(address.toString(), web3j,  credentials, new StaticGasProvider(gasPrice, gasLimited));
 		}
-		String evidence_id=evidenceId;
-		String evidence_hash=evidenceHash;
+		String credit_id=creditId;
+		String credit_hash=creditHash;
 		//通过hash和key算出一个用户机构签名数据
-		Sign.SignatureData data = Sign.getSignInterface().signMessage(evidence_hash.getBytes(), credentials.getEcKeyPair());
+		Sign.SignatureData data = Sign.getSignInterface().signMessage(credit_hash.getBytes(), credentials.getEcKeyPair());
 		String sign_data=Tools.signatureDataToString(data);
 		TransactionReceipt receipt = null;
 		try {
 			Sign.SignatureData signatureData = Tools.stringToSignatureData(sign_data);
 			System.out.println("正在执行！");
-			receipt = creditSignersData.newCredit(evidence_hash, evidence_id,evidence_id, BigInteger.valueOf(signatureData.getV()),signatureData.getR(),signatureData.getS()).sendAsync().get();
-			List<CreditSignersData.NewCreditEventEventResponse> newEvidenceList = creditSignersData.getNewCreditEventEvents(receipt);
-			if (newEvidenceList.size() > 0) {
-	               return new Address(newEvidenceList.get(0).addr);
+			receipt = creditSignersData.newCredit(credit_hash, credit_id,credit_id, BigInteger.valueOf(signatureData.getV()),signatureData.getR(),signatureData.getS()).sendAsync().get();
+			List<CreditSignersData.NewCreditEventEventResponse> newCreditList = creditSignersData.getNewCreditEventEvents(receipt);
+			if (newCreditList.size() > 0) {
+	               return new Address(newCreditList.get(0).addr);
 	        } else {
 	               return null;
 	        }
@@ -117,26 +117,26 @@ public class BcosApp {
 	}
 
 	//sendSignatureToBlockChain
-	//1.私钥文件名 2.keyStorePassword 3.keyPassword 4.newEvidenceAddress 5.evidence_hash
-	public boolean sendSignatureToBlockChain(String[] args,String evidence_hash) throws Exception{
+	//1.私钥文件名 2.keyStorePassword 3.keyPassword 4.newCreditAddress 5.credit_hash
+	public boolean sendSignatureToBlockChain(String[] args,String credit_hash) throws Exception{
 		Credentials credentials=loadkey(args[1],args[2],args[3]);
-        Credit evidence = Credit.load(args[4], web3j, credentials,  gasPrice, gasLimited);
-	    Sign.SignatureData data = Sign.getSignInterface().signMessage(evidence_hash.getBytes(), credentials.getEcKeyPair());
+        Credit credit = Credit.load(args[4], web3j, credentials,  gasPrice, gasLimited);
+	    Sign.SignatureData data = Sign.getSignInterface().signMessage(credit_hash.getBytes(), credentials.getEcKeyPair());
 		boolean flag=false;
 		try {
 				String signatureString=Tools.signatureDataToString(data);
 				Sign.SignatureData signature = Tools.stringToSignatureData(signatureString);
-	            String recoverAddress = verifySignedMessage(evidence_hash,signatureString);
+	            String recoverAddress = verifySignedMessage(credit_hash,signatureString);
 	            if(!credentials.getAddress().equals(recoverAddress))
 	            {
 	                throw new SignatureException();
 	            }
 	            System.out.println("开始发送！");
-	            TransactionReceipt receipt = evidence.addSignatures(BigInteger.valueOf(signature.getV()),
+	            TransactionReceipt receipt = credit.addSignatures(BigInteger.valueOf(signature.getV()),
 	                    signature.getR(),
 	                    signature.getS()).sendAsync().get();
-	            List<Credit.AddSignaturesEventEventResponse> addList = evidence.getAddSignaturesEventEvents(receipt);
-	            List<Credit.AddRepeatSignaturesEventEventResponse> addList2 = evidence.getAddRepeatSignaturesEventEvents(receipt);
+	            List<Credit.AddSignaturesEventEventResponse> addList = credit.getAddSignaturesEventEvents(receipt);
+	            List<Credit.AddRepeatSignaturesEventEventResponse> addList2 = credit.getAddRepeatSignaturesEventEvents(receipt);
 
 	            if (addList.size() > 0 || addList2.size() >0)
 	            {
@@ -151,8 +151,8 @@ public class BcosApp {
 	}
 
 
-	//getEvidence
-	public CreditData getEvidence(String keyStoreFileName,String keyStorePassword, String keyPassword,String transactionHash) throws Exception{
+	//getCredit
+	public CreditData getCredit(String keyStoreFileName,String keyStorePassword, String keyPassword,String transactionHash) throws Exception{
 		if (web3j == null )
 			return null;
 		Credentials credentials=loadkey(keyStoreFileName,keyStorePassword,keyPassword);
@@ -167,7 +167,7 @@ public class BcosApp {
 				return null;
 			//证据字段为6个
             creditData.setCreditHash(result2.getValue1());
-            creditData.setEvidenceInfo(result2.getValue2());
+            creditData.setCreditInfo(result2.getValue2());
             creditData.setCreditID(result2.getValue3());
 			List<BigInteger> vlist = result2.getValue4();
 			List<byte[]> rlist = result2.getValue5();
@@ -194,8 +194,8 @@ public class BcosApp {
 		return creditData;
 	}
 
-	//verifyEvidence
-	public boolean verifyEvidence(CreditData data) throws SignatureException {
+	//verifyCredit
+	public boolean verifyCredit(CreditData data) throws SignatureException {
 		 ArrayList<String> addressList = new ArrayList<>();
 	        for (String str : data.getSignatures()) {
 	            try {
