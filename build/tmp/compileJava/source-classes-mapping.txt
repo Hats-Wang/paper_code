@@ -54,7 +54,18 @@ org/bcos/credit/web3j/Credit.java
  org.bcos.credit.web3j.Credit$54
  org.bcos.credit.web3j.Credit$55
  org.bcos.credit.web3j.Credit$56
+ org.bcos.credit.web3j.Credit$57
+ org.bcos.credit.web3j.Credit$58
+ org.bcos.credit.web3j.Credit$59
  org.bcos.credit.web3j.Credit$6
+ org.bcos.credit.web3j.Credit$60
+ org.bcos.credit.web3j.Credit$61
+ org.bcos.credit.web3j.Credit$62
+ org.bcos.credit.web3j.Credit$63
+ org.bcos.credit.web3j.Credit$64
+ org.bcos.credit.web3j.Credit$65
+ org.bcos.credit.web3j.Credit$66
+ org.bcos.credit.web3j.Credit$67
  org.bcos.credit.web3j.Credit$7
  org.bcos.credit.web3j.Credit$8
  org.bcos.credit.web3j.Credit$9
@@ -71,6 +82,7 @@ org/bcos/credit/web3j/CreditSignersData.java
  org.bcos.credit.web3j.CreditSignersData$11
  org.bcos.credit.web3j.CreditSignersData$12
  org.bcos.credit.web3j.CreditSignersData$13
+ org.bcos.credit.web3j.CreditSignersData$14
  org.bcos.credit.web3j.CreditSignersData$2
  org.bcos.credit.web3j.CreditSignersData$3
  org.bcos.credit.web3j.CreditSignersData$4

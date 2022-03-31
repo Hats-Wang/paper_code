@@ -17,7 +17,10 @@ import org.bcos.credit.sample.PublicAddressConf;
 import org.bcos.credit.util.Tools;
 import org.bcos.credit.web3j.Credit;
 import org.bcos.credit.web3j.CreditSignersData;
+import org.fisco.bcos.web3j.abi.datatypes.generated.Int256;
+import org.fisco.bcos.web3j.abi.datatypes.generated.Uint8;
 import org.fisco.bcos.web3j.tuples.generated.Tuple7;
+import org.fisco.bcos.web3j.tuples.generated.Tuple8;
 import org.fisco.bcos.web3j.tx.gas.StaticGasProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -83,7 +86,7 @@ public class BcosApp {
 	}
 
 	//newCredit
-	public Address newCredit(String keyStoreFileName,String keyStorePassword, String keyPassword,String address,String creditId,String creditHash) throws Exception {
+	public Address newCredit(String keyStoreFileName, String keyStorePassword, String keyPassword, String address, String grade, String companyName, String nameHash, Boolean pledge, BigInteger companyValue) throws Exception {
 		Credentials credentials=loadkey(keyStoreFileName,keyStorePassword,keyPassword);
 		if(credentials==null){
 			return null;
@@ -94,16 +97,16 @@ public class BcosApp {
 		if (address != null) {
             creditSignersData = CreditSignersData.load(address.toString(), web3j,  credentials, new StaticGasProvider(gasPrice, gasLimited));
 		}
-		String credit_id=creditId;
-		String credit_hash=creditHash;
+
+		String name_hash=nameHash;
 		//通过hash和key算出一个用户机构签名数据
-		Sign.SignatureData data = Sign.getSignInterface().signMessage(credit_hash.getBytes(), credentials.getEcKeyPair());
+		Sign.SignatureData data = Sign.getSignInterface().signMessage(name_hash.getBytes(), credentials.getEcKeyPair());
 		String sign_data=Tools.signatureDataToString(data);
 		TransactionReceipt receipt = null;
 		try {
 			Sign.SignatureData signatureData = Tools.stringToSignatureData(sign_data);
 			System.out.println("正在执行！");
-			receipt = creditSignersData.newCredit(credit_hash, credit_id,credit_id, BigInteger.valueOf(signatureData.getV()),signatureData.getR(),signatureData.getS()).sendAsync().get();
+			receipt = creditSignersData.newCredit(grade, companyName,pledge, companyValue, BigInteger.valueOf(signatureData.getV()),signatureData.getR(),signatureData.getS()).sendAsync().get();
 			List<CreditSignersData.NewCreditEventEventResponse> newCreditList = creditSignersData.getNewCreditEventEvents(receipt);
 			if (newCreditList.size() > 0) {
 	               return new Address(newCreditList.get(0).addr);
@@ -117,16 +120,16 @@ public class BcosApp {
 	}
 
 	//sendSignatureToBlockChain
-	//1.私钥文件名 2.keyStorePassword 3.keyPassword 4.newCreditAddress 5.credit_hash
-	public boolean sendSignatureToBlockChain(String[] args,String credit_hash) throws Exception{
+	//1.私钥文件名 2.keyStorePassword 3.keyPassword 4.newCreditAddress 5.name_hash
+	public boolean sendSignatureToBlockChain(String[] args,String name_hash) throws Exception{
 		Credentials credentials=loadkey(args[1],args[2],args[3]);
         Credit credit = Credit.load(args[4], web3j, credentials,  gasPrice, gasLimited);
-	    Sign.SignatureData data = Sign.getSignInterface().signMessage(credit_hash.getBytes(), credentials.getEcKeyPair());
+	    Sign.SignatureData data = Sign.getSignInterface().signMessage(name_hash.getBytes(), credentials.getEcKeyPair());
 		boolean flag=false;
 		try {
 				String signatureString=Tools.signatureDataToString(data);
 				Sign.SignatureData signature = Tools.stringToSignatureData(signatureString);
-	            String recoverAddress = verifySignedMessage(credit_hash,signatureString);
+	            String recoverAddress = verifySignedMessage(name_hash,signatureString);
 	            if(!credentials.getAddress().equals(recoverAddress))
 	            {
 	                throw new SignatureException();
@@ -162,16 +165,17 @@ public class BcosApp {
         Credit credit = Credit.load(transactionHash, web3j, credentials,  gasPrice, gasLimited);
         CreditData creditData = new CreditData();
 		try {
-			Tuple7<String, String, String, List<BigInteger>, List<byte[]>, List<byte[]>, List<String>> result2 = credit.getCredit().send();
+			Tuple8<String, String, Boolean, BigInteger, List<BigInteger>, List<byte[]>, List<byte[]>, List<String>> result2 = credit.getCredit().send();
 			if (result2 == null)
 				return null;
 			//证据字段为6个
-            creditData.setCreditHash(result2.getValue1());
-            creditData.setCreditInfo(result2.getValue2());
-            creditData.setCreditID(result2.getValue3());
-			List<BigInteger> vlist = result2.getValue4();
-			List<byte[]> rlist = result2.getValue5();
-			List<byte[]> slist = result2.getValue6();
+            creditData.setGrade(result2.getValue1());
+            creditData.setCompanyName(result2.getValue2());
+            creditData.setPledge(result2.getValue3());
+			creditData.setCompanyValue(result2.getValue4());
+			List<BigInteger> vlist = result2.getValue5();
+			List<byte[]> rlist = result2.getValue6();
+			List<byte[]> slist = result2.getValue7();
 			ArrayList<String> signatureList = new ArrayList<String>();
 			for (int i = 0; i < vlist.size(); i++) {
 				Sign.SignatureData signature = new Sign.SignatureData(
@@ -179,7 +183,7 @@ public class BcosApp {
 				signatureList.add(Tools.signatureDataToString(signature));
 			}
             creditData.setSignatures(signatureList);
-			List<String> addresses = result2.getValue7();
+			List<String> addresses = result2.getValue8();
 			ArrayList<String> addressesList = new ArrayList<String>();
 			for (int i = 0; i < addresses.size(); i++) {
 				String str = addresses.get(i);
@@ -199,7 +203,7 @@ public class BcosApp {
 		 ArrayList<String> addressList = new ArrayList<>();
 	        for (String str : data.getSignatures()) {
 	            try {
-	                addressList.add(verifySignedMessage(data.getCreditHash(), str));
+	                addressList.add(verifySignedMessage(data.getNameHash(), str));
 	            } catch (SignatureException e) {
 	                throw e;
 	            }
