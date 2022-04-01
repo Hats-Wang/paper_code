@@ -3,15 +3,15 @@ import "./Credit.sol";
 
 contract CreditSignersData{
         address[] signers;
-		event newCreditEvent(address addr);
-        function newCredit(string cre, string info,string id,uint8 v, bytes32 r,bytes32 s)public returns(address)
+	event newCreditEvent(address addr);
+        function newCredit(string grd, string name, bool p, int256 vl,uint8 v, bytes32 r,bytes32 s)public returns(address)
         {
-            Credit credit = new Credit(cre, info, id, v, r, s, this, msg.sender);
+            Credit credit = new Credit(grd, name, p, vl, v, r, s, this, msg.sender);
             newCreditEvent(credit);
             return credit;
         }
 
-        function creditSignersData(address[] creditSigners)public{
+        function CreditSignersData(address[] creditSigners)public{
             for(uint i=0; i<creditSigners.length; ++i) {
             signers.push(creditSigners[i]);
 			}

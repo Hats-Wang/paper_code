@@ -2,7 +2,6 @@ package org.bcos.credit.app;
 
 import java.math.BigInteger;
 import java.util.List;
-
 import org.bcos.credit.sample.CreditData;
 import org.fisco.bcos.web3j.abi.datatypes.Address;
 
@@ -42,7 +41,7 @@ public class Main {
                 break;
             //newCredit
             case "new":
-                //参数1为keyStoreFileName（私钥文件名），参数2为keyStorePassword，参数3为keyPassword,
+                //参数1为keyStoreFileName（私钥文件名），参数2为keyStorePassword，参数3为keyPassword,deployAddress grade companyName nameHash pledge companyValue
                 newCreditAddress = app.newCredit(args[1], args[2], args[3], args[4], args[5], args[6], args[7], new Boolean(args[8]), new BigInteger(args[9]));
                 System.out.println("------------newCredit success, newCreditAddress: " + newCreditAddress.toString());
                 break;
@@ -51,6 +50,7 @@ public class Main {
                 //1.私钥文件名 2.keyStorePassword 3.keyPassword 4.newCreditAddress
                 //通过证据地址获取证据信息
                 CreditData creditData2 = app.getCredit(args[1], args[2], args[3], args[4]);
+
                 boolean flag = app.sendSignatureToBlockChain(args, creditData2.getNameHash());
                 if (flag) {
                     System.out.println("-----------sendSignatureToBlockChain success！" + flag);
@@ -64,7 +64,6 @@ public class Main {
                 //传入参数为1.私钥文件名 2.keyStorePassword 3.keyPassword 4.newCredit返回地址
                 CreditData creditData = app.getCredit(args[1], args[2], args[3], args[4]);
                 System.out.println("the CompanyName: " + creditData.getCompanyName());
-                System.out.println("the NameHash: " + creditData.getNameHash());
                 System.out.println("the credit grade of company: " + creditData.getGrade());
                 System.out.println("the CompanyValue: " + creditData.getCompanyValue());
                 if (creditData.getPledge()) {
@@ -101,6 +100,17 @@ public class Main {
                 break;
         }
         System.exit(0);
+    }
+
+    public static String byteArrayToHex(byte[] byteArray) {
+        char[] hexDigits = {'0','1','2','3','4','5','6','7','8','9', 'A','B','C','D','E','F' };
+        char[] resultCharArray =new char[byteArray.length * 2];
+        int index = 0;
+        for (byte b : byteArray) {
+            resultCharArray[index++] = hexDigits[b>>> 4 & 0xf];
+            resultCharArray[index++] = hexDigits[b& 0xf];
+        }
+        return new String(resultCharArray);
     }
 
 }

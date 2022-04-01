@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.Key;
 import java.security.KeyStore;
+import java.security.MessageDigest;
 import java.security.SignatureException;
 import java.security.interfaces.ECPrivateKey;
 import java.util.*;
@@ -17,9 +18,6 @@ import org.bcos.credit.sample.PublicAddressConf;
 import org.bcos.credit.util.Tools;
 import org.bcos.credit.web3j.Credit;
 import org.bcos.credit.web3j.CreditSignersData;
-import org.fisco.bcos.web3j.abi.datatypes.generated.Int256;
-import org.fisco.bcos.web3j.abi.datatypes.generated.Uint8;
-import org.fisco.bcos.web3j.tuples.generated.Tuple7;
 import org.fisco.bcos.web3j.tuples.generated.Tuple8;
 import org.fisco.bcos.web3j.tx.gas.StaticGasProvider;
 import org.springframework.context.ApplicationContext;
@@ -32,6 +30,7 @@ import org.fisco.bcos.web3j.crypto.Sign;
 import org.fisco.bcos.web3j.protocol.Web3j;
 import org.fisco.bcos.web3j.protocol.channel.ChannelEthereumService;
 import org.fisco.bcos.web3j.protocol.core.methods.response.TransactionReceipt;
+
 
 public class BcosApp {
 
@@ -99,6 +98,7 @@ public class BcosApp {
 		}
 
 		String name_hash=nameHash;
+		System.out.println(name_hash);
 		//通过hash和key算出一个用户机构签名数据
 		Sign.SignatureData data = Sign.getSignInterface().signMessage(name_hash.getBytes(), credentials.getEcKeyPair());
 		String sign_data=Tools.signatureDataToString(data);
@@ -176,6 +176,13 @@ public class BcosApp {
 			List<BigInteger> vlist = result2.getValue5();
 			List<byte[]> rlist = result2.getValue6();
 			List<byte[]> slist = result2.getValue7();
+
+			MessageDigest messageDigest =MessageDigest.getInstance("MD5");
+			messageDigest.update(creditData.getCompanyName().getBytes());
+			byte[] resultByteArray = messageDigest.digest();
+			String s = "0x" + byteArrayToHex(resultByteArray);
+			creditData.setNameHash(s);
+
 			ArrayList<String> signatureList = new ArrayList<String>();
 			for (int i = 0; i < vlist.size(); i++) {
 				Sign.SignatureData signature = new Sign.SignatureData(
@@ -197,6 +204,19 @@ public class BcosApp {
         }
 		return creditData;
 	}
+
+	public static String byteArrayToHex(byte[] byteArray) {
+		char[] hexDigits = {'0','1','2','3','4','5','6','7','8','9', 'A','B','C','D','E','F' };
+		char[] resultCharArray =new char[byteArray.length * 2];
+		int index = 0;
+		for (byte b : byteArray) {
+			resultCharArray[index++] = hexDigits[b>>> 4 & 0xf];
+			resultCharArray[index++] = hexDigits[b& 0xf];
+		}
+		return new String(resultCharArray);
+	}
+
+
 
 	//verifyCredit
 	public boolean verifyCredit(CreditData data) throws SignatureException {
