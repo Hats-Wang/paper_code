@@ -96,7 +96,7 @@ org/bcos/credit/util/Tools.java
  org.bcos.credit.util.Tools
 org/bcos/credit/sample/CreditData.java
  org.bcos.credit.sample.CreditData
-org/bcos/credit/app/Main.java
- org.bcos.credit.app.Main
 org/bcos/credit/app/BcosApp.java
  org.bcos.credit.app.BcosApp
+org/bcos/credit/app/Main.java
+ org.bcos.credit.app.Main

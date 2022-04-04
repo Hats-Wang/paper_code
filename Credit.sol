@@ -118,5 +118,11 @@ contract Credit{
          return companyName;
     }
 
+    function setPledge(bool p) public {
+        pledge = p;
+    }
 
+    function setValue(int256 v)public{
+        value = v;
+    }
 }

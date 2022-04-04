@@ -37,14 +37,16 @@ public class Main {
             case "deploy":
                 //此方法需要传入3个参数，参数1为keyStoreFileName（私钥文件名），参数2为keyStorePassword，参数3为keyPassword
                 address = app.deployContract(args[1], args[2], args[3]);
-                System.out.println("-----------deploy factoryContract success, address: " + address.toString());
+                System.out.println("-----------deploy Contract success, address: " + address.toString());
                 break;
+
             //newCredit
             case "new":
                 //参数1为keyStoreFileName（私钥文件名），参数2为keyStorePassword，参数3为keyPassword,deployAddress grade companyName nameHash pledge companyValue
                 newCreditAddress = app.newCredit(args[1], args[2], args[3], args[4], args[5], args[6], args[7], new Boolean(args[8]), new BigInteger(args[9]));
                 System.out.println("------------newCredit success, newCreditAddress: " + newCreditAddress.toString());
                 break;
+
             //sendSignatureToBlockChain
             case "send":
                 //1.私钥文件名 2.keyStorePassword 3.keyPassword 4.newCreditAddress
@@ -82,20 +84,29 @@ public class Main {
                     System.out.println("the publicKey[" + i + "]: " + publicKey);
                 }
                 break;
+
             case "verify":
                 //传入参数为1.私钥文件名 2.keyStorePassword 3.keyPassword 4.newCredit返回地址
                 CreditData creditData1 = app.getCredit(args[1], args[2], args[3], args[4]);
                 boolean flag2 = app.verifyCredit(creditData1);
                 if (flag2) {
-                    System.out.println("--------verifyCredit success:" + flag2);
+                    System.out.println("--------verifyCredit success!" + flag2);
                 } else {
-                    System.out.println("--------verifyCredit failed:" + flag2);
+                    System.out.println("--------verifyCredit failed!" + flag2);
                 }
                 break;
+
+            case "mortgage":
+                //传入参数为1.私钥文件名 2.keyStorePassword 3.keyPassword 4.newCredit返回地址
+                CreditData creditData3 = app.getCredit(args[1], args[2], args[3], args[4]);
+
+                break;
+
             case "getPublicKey":
                 String publicKey = app.getPublicKey(args[1], args[2], args[3]);
                 System.out.println("---------publicKey:" + publicKey);
                 break;
+
             default:
                 break;
         }
