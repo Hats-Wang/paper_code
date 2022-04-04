@@ -125,4 +125,8 @@ contract Credit{
     function setValue(int256 v)public{
         value = v;
     }
+
+    function setGrade(string grd)public{
+        grade = grd;
+    }
 }

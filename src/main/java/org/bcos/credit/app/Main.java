@@ -3,24 +3,17 @@ package org.bcos.credit.app;
 import java.math.BigInteger;
 import java.util.List;
 import org.bcos.credit.sample.CreditData;
+import org.bcos.credit.web3j.Mortgage;
 import org.fisco.bcos.web3j.abi.datatypes.Address;
+import org.fisco.bcos.web3j.protocol.core.methods.response.TransactionReceipt;
+import org.fisco.bcos.web3j.tuples.generated.Tuple1;
 
 
 public class Main {
 
-    private static String LOGO = "\n"
-            + "命令输入参考如下！ \n"
-            + "工厂合约部署：./credit deploy keyStoreFileName keyStorePassword keyPassword  \n"
-            + "创建新证据：./credit new  keyStoreFileName keyStorePassword keyPassword deployAddress grade companyName nameHash pledge companyValue  \n"
-            + "发送签名：./credit send keyStoreFileName keyStorePassword keyPassword newCreditAddress name_hash \n"
-            + "获取证据：./credit get keyStoreFileName keyStorePassword keyPassword newCreditAddress \n"
-            + "证据和签名校验：./credit verify keyStoreFileName keyStorePassword keyPassword newCreditAddress \n"
-            + "获取公钥：./credit getPublicKey keyStoreFileName keyStorePassword keyPassword  \n"
-            + "抵押公司：./credit mortgage keyStoreFileName keyStorePassword keyPassword newCreditAddress loan_num \n";
 
     public static void main(String[] args) throws Exception {
         BcosApp app = new BcosApp();
-        Address address = null;
         Address newCreditAddress = null;
         boolean configure = app.loadConfig();
         if (args.length < 4) {
@@ -31,13 +24,12 @@ public class Main {
             System.err.println("error in load configure, init failed !!!");
             System.exit(0);
         }
-        System.out.println(LOGO);
+
         switch (args[0]) {
             //deploy
             case "deploy":
                 //此方法需要传入3个参数，参数1为keyStoreFileName（私钥文件名），参数2为keyStorePassword，参数3为keyPassword
-                address = app.deployContract(args[1], args[2], args[3]);
-                System.out.println("-----------deploy Contract success, address: " + address.toString());
+                app.deployContract(args[1], args[2], args[3]);
                 break;
 
             //newCredit
@@ -97,11 +89,23 @@ public class Main {
                 break;
 
             case "mortgage":
-                //传入参数为1.私钥文件名 2.keyStorePassword 3.keyPassword 4.newCredit返回地址
-                CreditData creditData3 = app.getCredit(args[1], args[2], args[3], args[4]);
-
+                //传入参数为1.私钥文件名 2.keyStorePassword 3.keyPassword 4.newCredit返回地址 5.Mortgage返回地址 6抵押金额
+                creditData1 = app.getCredit(args[1], args[2], args[3], args[4]);
+                Mortgage mor = app.loadMortgage(args[1], args[2], args[3],args[5]);
+                mor.mortgage(args[4],new BigInteger(args[6])).send();
+                Boolean f = mor.getSuc().send();
+                if(f)
+                    System.out.println("company is mortgageed successfully!");
+                else
+                    System.out.println("company is mortgaged abortively!");
                 break;
 
+            case "redeem":
+                //传入参数为1.私钥文件名 2.keyStorePassword 3.keyPassword 4.newCredit返回地址 5.Mortgage返回地址
+                Mortgage mor2 = app.loadMortgage(args[1], args[2], args[3],args[5]);
+                mor2.redeem(args[4]).send();
+                System.out.println("");
+                break;
             case "getPublicKey":
                 String publicKey = app.getPublicKey(args[1], args[2], args[3]);
                 System.out.println("---------publicKey:" + publicKey);

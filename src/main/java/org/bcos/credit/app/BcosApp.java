@@ -9,6 +9,8 @@ import java.security.MessageDigest;
 import java.security.SignatureException;
 import java.security.interfaces.ECPrivateKey;
 import java.util.*;
+
+import org.bcos.credit.web3j.Mortgage;
 import org.fisco.bcos.channel.client.Service;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -18,6 +20,7 @@ import org.bcos.credit.sample.PublicAddressConf;
 import org.bcos.credit.util.Tools;
 import org.bcos.credit.web3j.Credit;
 import org.bcos.credit.web3j.CreditSignersData;
+import org.fisco.bcos.web3j.protocol.core.RemoteCall;
 import org.fisco.bcos.web3j.tuples.generated.Tuple8;
 import org.fisco.bcos.web3j.tx.gas.StaticGasProvider;
 import org.springframework.context.ApplicationContext;
@@ -77,6 +80,11 @@ public class BcosApp {
         List<String> arrayList = addressConf.values().stream().map(String::new).collect(Collectors.toCollection(ArrayList::new));
         try {
             creditSignersData = CreditSignersData.deploy(web3j, credentials, new StaticGasProvider(gasPrice, gasLimited), arrayList).send();
+			String address = creditSignersData.getContractAddress();
+			System.out.println("-----------deploy SignersData Contract success, address: " + address);
+			Mortgage mor  = Mortgage.deploy(web3j, credentials,new StaticGasProvider(gasPrice, gasLimited)).send();
+			address = mor.getContractAddress();
+			System.out.println("-----------deploy Mortgage Contract success, address: " + address);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -98,7 +106,6 @@ public class BcosApp {
 		}
 
 		String name_hash=nameHash;
-		System.out.println(name_hash);
 		//通过hash和key算出一个用户机构签名数据
 		Sign.SignatureData data = Sign.getSignInterface().signMessage(name_hash.getBytes(), credentials.getEcKeyPair());
 		String sign_data=Tools.signatureDataToString(data);
@@ -163,7 +170,7 @@ public class BcosApp {
 			return null;
 		}
         Credit credit = Credit.load(transactionHash, web3j, credentials,  gasPrice, gasLimited);
-        CreditData creditData = new CreditData();
+		CreditData creditData = new CreditData();
 		try {
 			Tuple8<String, String, Boolean, BigInteger, List<BigInteger>, List<byte[]>, List<byte[]>, List<String>> result2 = credit.getCredit().send();
 			if (result2 == null)
@@ -286,5 +293,15 @@ public class BcosApp {
     	Credentials credentials=loadkey(keyStoreFileName, keyStorePassword, keyPassword);
     	return credentials.getAddress();
     }
-}
 
+	public Mortgage loadMortgage(String keyStoreFileName,String keyStorePassword, String keyPassword,String add) {
+		if (web3j == null )
+			return null;
+		Credentials credentials=loadkey(keyStoreFileName,keyStorePassword,keyPassword);
+		if(credentials==null){
+			return null;
+		}
+		Mortgage mor = Mortgage.load(add, web3j, credentials, gasPrice, gasLimited);
+		return mor;
+	}
+}
