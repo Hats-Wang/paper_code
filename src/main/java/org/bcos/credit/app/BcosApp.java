@@ -113,7 +113,8 @@ public class BcosApp {
 		try {
 			Sign.SignatureData signatureData = Tools.stringToSignatureData(sign_data);
 			System.out.println("正在执行！");
-			receipt = creditSignersData.newCredit(grade, companyName,pledge, companyValue, BigInteger.valueOf(signatureData.getV()),signatureData.getR(),signatureData.getS()).sendAsync().get();
+			receipt = creditSignersData.newCredit(new BigInteger(grade), companyName,pledge, companyValue, BigInteger.valueOf(signatureData.getV()),signatureData.getR(),signatureData.getS()).sendAsync().get();
+
 			List<CreditSignersData.NewCreditEventEventResponse> newCreditList = creditSignersData.getNewCreditEventEvents(receipt);
 			if (newCreditList.size() > 0) {
 	               return new Address(newCreditList.get(0).addr);
@@ -172,7 +173,7 @@ public class BcosApp {
         Credit credit = Credit.load(transactionHash, web3j, credentials,  gasPrice, gasLimited);
 		CreditData creditData = new CreditData();
 		try {
-			Tuple8<String, String, Boolean, BigInteger, List<BigInteger>, List<byte[]>, List<byte[]>, List<String>> result2 = credit.getCredit().send();
+			Tuple8<BigInteger, String, Boolean, BigInteger, List<BigInteger>, List<byte[]>, List<byte[]>, List<String>> result2 = credit.getCredit().send();
 			if (result2 == null)
 				return null;
 			//证据字段为6个

@@ -4,8 +4,8 @@ org/bcos/credit/web3j/Mortgage.java
  org.bcos.credit.web3j.Mortgage$2
  org.bcos.credit.web3j.Mortgage$3
  org.bcos.credit.web3j.Mortgage$4
-org/bcos/credit/sample/PublicAddressConf.java
- org.bcos.credit.sample.PublicAddressConf
+org/bcos/credit/app/Main.java
+ org.bcos.credit.app.Main
 org/bcos/credit/sample/CreditData.java
  org.bcos.credit.sample.CreditData
 org/bcos/credit/web3j/CreditSignersData.java
@@ -107,5 +107,5 @@ org/bcos/credit/web3j/Credit.java
  org.bcos.credit.web3j.Credit$ErrorNewSignaturesEventEventResponse
  org.bcos.credit.web3j.Credit$ErrorRepeatSignaturesEventEventResponse
  org.bcos.credit.web3j.Credit$NewSignaturesEventEventResponse
-org/bcos/credit/app/Main.java
- org.bcos.credit.app.Main
+org/bcos/credit/sample/PublicAddressConf.java
+ org.bcos.credit.sample.PublicAddressConf

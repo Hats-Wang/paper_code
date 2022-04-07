@@ -6,7 +6,7 @@ function getSignersSize() public constant returns(uint){}
 
 contract Credit{
     
-    string grade;
+    int256 grade;
     string companyName;
     bool pledge;
     int256 value;
@@ -16,18 +16,18 @@ contract Credit{
     address[] signers;
     address public signersAddr;
     
-        event addSignaturesEvent(string grd, string name, bool p, int256 vl, uint8 v, bytes32 r, bytes32 s);
-        event newSignaturesEvent(string grd, string name, bool p, int256 vl, uint8 v, bytes32 r, bytes32 s,address addr);
-        event errorNewSignaturesEvent(string grd, string name, bool p, int256 vl, uint8 v, bytes32 r, bytes32 s,address addr);
-        event errorAddSignaturesEvent(string grd, string name, bool p, int256 vl, uint8 v, bytes32 r, bytes32 s,address addr);
-        event addRepeatSignaturesEvent(string grd, string name, bool p, int256 vl, uint8 v, bytes32 r, bytes32 s);
-        event errorRepeatSignaturesEvent(string grd, string name, bool p, int256 vl, uint8 v, bytes32 r, bytes32 s, address addr);
+        event addSignaturesEvent(int256 grd, string name, bool p, int256 vl, uint8 v, bytes32 r, bytes32 s);
+        event newSignaturesEvent(int256 grd, string name, bool p, int256 vl, uint8 v, bytes32 r, bytes32 s,address addr);
+        event errorNewSignaturesEvent(int256 grd, string name, bool p, int256 vl, uint8 v, bytes32 r, bytes32 s,address addr);
+        event errorAddSignaturesEvent(int256 grd, string name, bool p, int256 vl, uint8 v, bytes32 r, bytes32 s,address addr);
+        event addRepeatSignaturesEvent(int256 grd, string name, bool p, int256 vl, uint8 v, bytes32 r, bytes32 s);
+        event errorRepeatSignaturesEvent(int256 grd, string name, bool p, int256 vl, uint8 v, bytes32 r, bytes32 s, address addr);
 
     function CallVerify(address addr) public constant returns(bool) {
         return CreditSignersDataABI(signersAddr).verify(addr);
     }
 
-    function Credit(string grd, string name, bool p, int256 vl, uint8 v, bytes32 r, bytes32 s, address addr, address sender) public {
+    function Credit(int256 grd, string name, bool p, int256 vl, uint8 v, bytes32 r, bytes32 s, address addr, address sender) public {
        signersAddr = addr;
        if(CallVerify(sender))
        {
@@ -48,7 +48,7 @@ contract Credit{
     }
 
 
-    function getCredit() public constant returns(string,string,bool,int256,uint8[],bytes32[],bytes32[],address[]){
+    function getCredit() public constant returns(int256,string,bool,int256,uint8[],bytes32[],bytes32[],address[]){
         uint length = CreditSignersDataABI(signersAddr).getSignersSize();
          address[] memory signerList = new address[](length);
          for(uint i= 0 ;i<length ;i++)
@@ -110,7 +110,7 @@ contract Credit{
          return value;
     }
 
-    function getGrade() public constant returns(string){
+    function getGrade() public constant returns(int256){
          return grade;
     }
 
@@ -126,7 +126,7 @@ contract Credit{
         value = v;
     }
 
-    function setGrade(string grd)public{
+    function setGrade(int256 grd)public{
         grade = grd;
     }
 }

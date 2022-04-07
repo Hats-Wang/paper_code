@@ -4,10 +4,10 @@ import "./Credit.sol";
 contract CreditSignersData{
         address[] signers;
 	event newCreditEvent(address addr);
-        function newCredit(string grd, string name, bool p, int256 vl,uint8 v, bytes32 r,bytes32 s)public returns(address)
+        function newCredit(int256 grd, string name, bool p, int256 vl,uint8 v, bytes32 r,bytes32 s)public returns(address)
         {
             Credit credit = new Credit(grd, name, p, vl, v, r, s, this, msg.sender);
-            newCreditEvent(credit);
+            emit newCreditEvent(credit);
             return credit;
         }
 

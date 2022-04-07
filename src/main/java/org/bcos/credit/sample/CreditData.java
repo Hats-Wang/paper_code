@@ -10,11 +10,11 @@ public class CreditData {
     private String companyName;//证据ID
     private String nameHash;
     private List<String> publicKeys;//证据生效需要的公钥列表
-    private String grade;
+    private BigInteger grade;
     private Boolean pledge;
     private BigInteger companyValue;
 
-    public CreditData(List<String> signatures, String companyName, String nameHash, List<String> publicKeys, String grade, Boolean pledge, BigInteger companyValue) {
+    public CreditData(List<String> signatures, String companyName, String nameHash, List<String> publicKeys, BigInteger grade, Boolean pledge, BigInteger companyValue) {
         this.signatures = signatures;
         this.companyName = companyName;
         this.nameHash = nameHash;
@@ -59,11 +59,11 @@ public class CreditData {
         this.publicKeys = publicKeys;
     }
 
-    public String getGrade() {
+    public BigInteger getGrade() {
         return grade;
     }
 
-    public void setGrade(String grade) {
+    public void setGrade(BigInteger grade) {
         this.grade = grade;
     }
 
