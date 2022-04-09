@@ -117,9 +117,9 @@ org/bcos/credit/web3j/Credit.java
  org.bcos.credit.web3j.Credit$ErrorNewSignaturesEventEventResponse
  org.bcos.credit.web3j.Credit$ErrorRepeatSignaturesEventEventResponse
  org.bcos.credit.web3j.Credit$NewSignaturesEventEventResponse
+org/bcos/credit/app/Main.java
+ org.bcos.credit.app.Main
 org/bcos/credit/app/BreakThread.java
  org.bcos.credit.app.BreakThread
 org/bcos/credit/app/BcosApp.java
  org.bcos.credit.app.BcosApp
-org/bcos/credit/app/Main.java
- org.bcos.credit.app.Main

@@ -21,7 +21,7 @@ public class Main {
             System.err.println("error in load configure, init failed !!!");
             System.exit(0);
         }
-        while(true) {
+        while (true) {
             System.out.println("\n\n");
             BufferedReader scanner = new BufferedReader(new InputStreamReader(System.in));
             String str = scanner.readLine();
@@ -46,8 +46,8 @@ public class Main {
                     //1.私钥文件名 2.keyStorePassword 3.keyPassword 4.newCreditAddress
                     //通过证据地址获取证据信息
                     CreditData creditData2 = app.getCredit(arg[1], arg[2], arg[3], arg[4]);
-
-                    boolean flag = app.sendSignatureToBlockChain(args, creditData2.getNameHash());
+                   
+                    boolean flag = app.sendSignatureToBlockChain(arg, creditData2.getNameHash());
                     if (flag) {
                         System.out.println("-----------sendSignatureToBlockChain success！" + flag);
                     } else {
@@ -94,8 +94,8 @@ public class Main {
 
                 case "borrow":
                     //传入参数为1.私钥文件名 2.keyStorePassword 3.keyPassword 4.newCredit返回地址 5.time 6.loan_num
-                    Boolean ok = app.borrowMoney(arg[1],arg[2],arg[3],arg[4],arg[5],arg[6]);
-                    if(ok)
+                    Boolean ok = app.borrowMoney(arg[1], arg[2], arg[3], arg[4], arg[5], arg[6]);
+                    if (ok)
                         System.out.println("Company borrow money successfully!");
                     else
                         System.out.println("Company failed to borrow money!");
@@ -103,8 +103,8 @@ public class Main {
 
                 case "payback":
                     //传入参数为1.私钥文件名 2.keyStorePassword 3.keyPassword 4.newCredit返回地址
-                    Boolean ok2 = app.payBack(arg[1],arg[2],arg[3],arg[4]);
-                    if(ok2)
+                    Boolean ok2 = app.payBack(arg[1], arg[2], arg[3], arg[4]);
+                    if (ok2)
                         System.out.println("Company payback successfully!");
                     else
                         System.out.println("Company failed to payback!");
@@ -123,17 +123,6 @@ public class Main {
                     break;
             }
         }
-    }
-
-    public static String byteArrayToHex(byte[] byteArray) {
-        char[] hexDigits = {'0','1','2','3','4','5','6','7','8','9', 'A','B','C','D','E','F' };
-        char[] resultCharArray =new char[byteArray.length * 2];
-        int index = 0;
-        for (byte b : byteArray) {
-            resultCharArray[index++] = hexDigits[b>>> 4 & 0xf];
-            resultCharArray[index++] = hexDigits[b& 0xf];
-        }
-        return new String(resultCharArray);
     }
 
 }
