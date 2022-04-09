@@ -2,23 +2,15 @@ package org.bcos.credit.web3j;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import org.fisco.bcos.channel.client.TransactionSucCallback;
-import org.fisco.bcos.web3j.abi.FunctionReturnDecoder;
+import org.fisco.bcos.web3j.abi.FunctionEncoder;
 import org.fisco.bcos.web3j.abi.TypeReference;
-import org.fisco.bcos.web3j.abi.datatypes.Address;
 import org.fisco.bcos.web3j.abi.datatypes.Bool;
 import org.fisco.bcos.web3j.abi.datatypes.Function;
 import org.fisco.bcos.web3j.abi.datatypes.Type;
-import org.fisco.bcos.web3j.abi.datatypes.generated.Int256;
 import org.fisco.bcos.web3j.crypto.Credentials;
 import org.fisco.bcos.web3j.crypto.EncryptType;
 import org.fisco.bcos.web3j.protocol.Web3j;
 import org.fisco.bcos.web3j.protocol.core.RemoteCall;
-import org.fisco.bcos.web3j.protocol.core.methods.response.TransactionReceipt;
-import org.fisco.bcos.web3j.tuples.generated.Tuple1;
-import org.fisco.bcos.web3j.tuples.generated.Tuple2;
 import org.fisco.bcos.web3j.tx.Contract;
 import org.fisco.bcos.web3j.tx.TransactionManager;
 import org.fisco.bcos.web3j.tx.gas.ContractGasProvider;
@@ -35,25 +27,21 @@ import org.fisco.bcos.web3j.tx.txdecode.TransactionDecoder;
  */
 @SuppressWarnings("unchecked")
 public class Mortgage extends Contract {
-    public static final String[] BINARY_ARRAY = {"608060405260016000806101000a81548160ff02191690831515021790555034801561002a57600080fd5b506104168061003a6000396000f300608060405260043610610057576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806395a2251f1461005c578063a79c60ac1461009f578063c4a4647e146100ce575b600080fd5b34801561006857600080fd5b5061009d600480360381019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061011b565b005b3480156100ab57600080fd5b506100b46101b0565b604051808215151515815260200191505060405180910390f35b3480156100da57600080fd5b50610119600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291905050506101c6565b005b60008190508073ffffffffffffffffffffffffffffffffffffffff1663a426cefc60006040518263ffffffff167c01000000000000000000000000000000000000000000000000000000000281526004018082151515158152602001915050600060405180830381600087803b15801561019457600080fd5b505af11580156101a8573d6000803e3d6000fd5b505050505050565b60008060009054906101000a900460ff16905090565b6000808391508173ffffffffffffffffffffffffffffffffffffffff1663209652556040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401602060405180830381600087803b15801561023057600080fd5b505af1158015610244573d6000803e3d6000fd5b505050506040513d602081101561025a57600080fd5b8101908080519060200190929190505050905082811215801561031957508173ffffffffffffffffffffffffffffffffffffffff1663c8f5acb66040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401602060405180830381600087803b1580156102dc57600080fd5b505af11580156102f0573d6000803e3d6000fd5b505050506040513d602081101561030657600080fd5b8101908080519060200190929190505050155b156103c9578173ffffffffffffffffffffffffffffffffffffffff1663a426cefc60016040518263ffffffff167c01000000000000000000000000000000000000000000000000000000000281526004018082151515158152602001915050600060405180830381600087803b15801561039257600080fd5b505af11580156103a6573d6000803e3d6000fd5b5050505060016000806101000a81548160ff0219169083151502179055506103e4565b60008060006101000a81548160ff0219169083151502179055505b505050505600a165627a7a723058205962897b7af8905cf7fe98fa6de797133931d3dfb4561ece89106cd40febbfe70029"};
+    public static final String[] BINARY_ARRAY = {"608060405260016000806101000a81548160ff02191690831515021790555034801561002a57600080fd5b506040516040806103ec83398101806040528101908080519060200190929190805190602001909291905050506000808391508173ffffffffffffffffffffffffffffffffffffffff1663209652556040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401602060405180830381600087803b1580156100c157600080fd5b505af11580156100d5573d6000803e3d6000fd5b505050506040513d60208110156100eb57600080fd5b810190808051906020019092919050505090508281121580156101aa57508173ffffffffffffffffffffffffffffffffffffffff1663c8f5acb66040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401602060405180830381600087803b15801561016d57600080fd5b505af1158015610181573d6000803e3d6000fd5b505050506040513d602081101561019757600080fd5b8101908080519060200190929190505050155b1561030d578173ffffffffffffffffffffffffffffffffffffffff1663a426cefc60016040518263ffffffff167c01000000000000000000000000000000000000000000000000000000000281526004018082151515158152602001915050600060405180830381600087803b15801561022357600080fd5b505af1158015610237573d6000803e3d6000fd5b505050508173ffffffffffffffffffffffffffffffffffffffff1663ab46159e306040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b1580156102d657600080fd5b505af11580156102ea573d6000803e3d6000fd5b5050505060016000806101000a81548160ff021916908315150217905550610328565b60008060006101000a81548160ff0219169083151502179055505b5050505060b28061033a6000396000f300608060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063a79c60ac146044575b600080fd5b348015604f57600080fd5b5060566070565b604051808215151515815260200191505060405180910390f35b60008060009054906101000a900460ff169050905600a165627a7a72305820da5685a2b3cce10c8da7ccd8a94f266161ce7b26edd4d032b1da6dc8620bcc780029"};
 
     public static final String BINARY = String.join("", BINARY_ARRAY);
 
-    public static final String[] ABI_ARRAY = {"[{\"constant\":false,\"inputs\":[{\"name\":\"add\",\"type\":\"address\"}],\"name\":\"redeem\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getSuc\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"add\",\"type\":\"address\"},{\"name\":\"num\",\"type\":\"int256\"}],\"name\":\"mortgage\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]"};
+    public static final String[] ABI_ARRAY = {"[{\"constant\":true,\"inputs\":[],\"name\":\"getSuc\",\"outputs\":[{\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"name\":\"add\",\"type\":\"address\"},{\"name\":\"num\",\"type\":\"int256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}]"};
 
     public static final String ABI = String.join("", ABI_ARRAY);
 
     public static final TransactionDecoder transactionDecoder = new TransactionDecoder(ABI, BINARY);
 
-    public static final String[] SM_BINARY_ARRAY = {"608060405260016000806101000a81548160ff02191690831515021790555034801561002a57600080fd5b506104168061003a6000396000f300608060405260043610610057576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680636351e9401461005c578063b0f3f48b1461008b578063ec706743146100ce575b600080fd5b34801561006857600080fd5b5061007161011b565b604051808215151515815260200191505060405180910390f35b34801561009757600080fd5b506100cc600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610131565b005b3480156100da57600080fd5b50610119600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291905050506101c6565b005b60008060009054906101000a900460ff16905090565b60008190508073ffffffffffffffffffffffffffffffffffffffff16631864e58860006040518263ffffffff167c01000000000000000000000000000000000000000000000000000000000281526004018082151515158152602001915050600060405180830381600087803b1580156101aa57600080fd5b505af11580156101be573d6000803e3d6000fd5b505050505050565b6000808391508173ffffffffffffffffffffffffffffffffffffffff16639f00d7356040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401602060405180830381600087803b15801561023057600080fd5b505af1158015610244573d6000803e3d6000fd5b505050506040513d602081101561025a57600080fd5b8101908080519060200190929190505050905082811215801561031957508173ffffffffffffffffffffffffffffffffffffffff166334f196316040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401602060405180830381600087803b1580156102dc57600080fd5b505af11580156102f0573d6000803e3d6000fd5b505050506040513d602081101561030657600080fd5b8101908080519060200190929190505050155b156103c9578173ffffffffffffffffffffffffffffffffffffffff16631864e58860016040518263ffffffff167c01000000000000000000000000000000000000000000000000000000000281526004018082151515158152602001915050600060405180830381600087803b15801561039257600080fd5b505af11580156103a6573d6000803e3d6000fd5b5050505060016000806101000a81548160ff0219169083151502179055506103e4565b60008060006101000a81548160ff0219169083151502179055505b505050505600a165627a7a723058200beee1dff25653fd611469c26f10adffa7f546026617072f226fe175ff89eaaa0029"};
+    public static final String[] SM_BINARY_ARRAY = {"608060405260016000806101000a81548160ff02191690831515021790555034801561002a57600080fd5b506040516040806103ec83398101806040528101908080519060200190929190805190602001909291905050506000808391508173ffffffffffffffffffffffffffffffffffffffff16639f00d7356040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401602060405180830381600087803b1580156100c157600080fd5b505af11580156100d5573d6000803e3d6000fd5b505050506040513d60208110156100eb57600080fd5b810190808051906020019092919050505090508281121580156101aa57508173ffffffffffffffffffffffffffffffffffffffff166334f196316040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401602060405180830381600087803b15801561016d57600080fd5b505af1158015610181573d6000803e3d6000fd5b505050506040513d602081101561019757600080fd5b8101908080519060200190929190505050155b1561030d578173ffffffffffffffffffffffffffffffffffffffff16631864e58860016040518263ffffffff167c01000000000000000000000000000000000000000000000000000000000281526004018082151515158152602001915050600060405180830381600087803b15801561022357600080fd5b505af1158015610237573d6000803e3d6000fd5b505050508173ffffffffffffffffffffffffffffffffffffffff1663069ee212306040518263ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b1580156102d657600080fd5b505af11580156102ea573d6000803e3d6000fd5b5050505060016000806101000a81548160ff021916908315150217905550610328565b60008060006101000a81548160ff0219169083151502179055505b5050505060b28061033a6000396000f300608060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680636351e940146044575b600080fd5b348015604f57600080fd5b5060566070565b604051808215151515815260200191505060405180910390f35b60008060009054906101000a900460ff169050905600a165627a7a72305820c33a73303c3ef241b738253f327b9d28a113e8accdc6c26c624ce2cf95ca4b810029"};
 
     public static final String SM_BINARY = String.join("", SM_BINARY_ARRAY);
 
-    public static final String FUNC_REDEEM = "redeem";
-
     public static final String FUNC_GETSUC = "getSuc";
-
-    public static final String FUNC_MORTGAGE = "mortgage";
 
     @Deprecated
     protected Mortgage(String contractAddress, Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
@@ -81,87 +69,11 @@ public class Mortgage extends Contract {
         return transactionDecoder;
     }
 
-    public RemoteCall<TransactionReceipt> redeem(String add) {
-        final Function function = new Function(
-                FUNC_REDEEM, 
-                Arrays.<Type>asList(new Address(add)),
-                Collections.<TypeReference<?>>emptyList());
-        return executeRemoteCallTransaction(function);
-    }
-
-    public void redeem(String add, TransactionSucCallback callback) {
-        final Function function = new Function(
-                FUNC_REDEEM, 
-                Arrays.<Type>asList(new Address(add)),
-                Collections.<TypeReference<?>>emptyList());
-        asyncExecuteTransaction(function, callback);
-    }
-
-    public String redeemSeq(String add) {
-        final Function function = new Function(
-                FUNC_REDEEM, 
-                Arrays.<Type>asList(new Address(add)),
-                Collections.<TypeReference<?>>emptyList());
-        return createTransactionSeq(function);
-    }
-
-    public Tuple1<String> getRedeemInput(TransactionReceipt transactionReceipt) {
-        String data = transactionReceipt.getInput().substring(10);
-        final Function function = new Function(FUNC_REDEEM, 
-                Arrays.<Type>asList(), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}));
-        List<Type> results = FunctionReturnDecoder.decode(data, function.getOutputParameters());;
-        return new Tuple1<String>(
-
-                (String) results.get(0).getValue()
-                );
-    }
-
     public RemoteCall<Boolean> getSuc() {
         final Function function = new Function(FUNC_GETSUC, 
                 Arrays.<Type>asList(), 
                 Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {}));
         return executeRemoteCallSingleValueReturn(function, Boolean.class);
-    }
-
-    public RemoteCall<TransactionReceipt> mortgage(String add, BigInteger num) {
-        final Function function = new Function(
-                FUNC_MORTGAGE, 
-                Arrays.<Type>asList(new Address(add),
-                new Int256(num)),
-                Collections.<TypeReference<?>>emptyList());
-        return executeRemoteCallTransaction(function);
-    }
-
-    public void mortgage(String add, BigInteger num, TransactionSucCallback callback) {
-        final Function function = new Function(
-                FUNC_MORTGAGE, 
-                Arrays.<Type>asList(new Address(add),
-                new Int256(num)),
-                Collections.<TypeReference<?>>emptyList());
-        asyncExecuteTransaction(function, callback);
-    }
-
-    public String mortgageSeq(String add, BigInteger num) {
-        final Function function = new Function(
-                FUNC_MORTGAGE, 
-                Arrays.<Type>asList(new Address(add),
-                new Int256(num)),
-                Collections.<TypeReference<?>>emptyList());
-        return createTransactionSeq(function);
-    }
-
-    public Tuple2<String, BigInteger> getMortgageInput(TransactionReceipt transactionReceipt) {
-        String data = transactionReceipt.getInput().substring(10);
-        final Function function = new Function(FUNC_MORTGAGE, 
-                Arrays.<Type>asList(), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Int256>() {}));
-        List<Type> results = FunctionReturnDecoder.decode(data, function.getOutputParameters());;
-        return new Tuple2<String, BigInteger>(
-
-                (String) results.get(0).getValue(), 
-                (BigInteger) results.get(1).getValue()
-                );
     }
 
     @Deprecated
@@ -182,21 +94,29 @@ public class Mortgage extends Contract {
         return new Mortgage(contractAddress, web3j, transactionManager, contractGasProvider);
     }
 
-    public static RemoteCall<Mortgage> deploy(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider) {
-        return deployRemoteCall(Mortgage.class, web3j, credentials, contractGasProvider, getBinary(), "");
+    public static RemoteCall<Mortgage> deploy(Web3j web3j, Credentials credentials, ContractGasProvider contractGasProvider, String add, BigInteger num) {
+        String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new org.fisco.bcos.web3j.abi.datatypes.Address(add), 
+                new org.fisco.bcos.web3j.abi.datatypes.generated.Int256(num)));
+        return deployRemoteCall(Mortgage.class, web3j, credentials, contractGasProvider, getBinary(), encodedConstructor);
+    }
+
+    public static RemoteCall<Mortgage> deploy(Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider, String add, BigInteger num) {
+        String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new org.fisco.bcos.web3j.abi.datatypes.Address(add), 
+                new org.fisco.bcos.web3j.abi.datatypes.generated.Int256(num)));
+        return deployRemoteCall(Mortgage.class, web3j, transactionManager, contractGasProvider, getBinary(), encodedConstructor);
     }
 
     @Deprecated
-    public static RemoteCall<Mortgage> deploy(Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(Mortgage.class, web3j, credentials, gasPrice, gasLimit, getBinary(), "");
-    }
-
-    public static RemoteCall<Mortgage> deploy(Web3j web3j, TransactionManager transactionManager, ContractGasProvider contractGasProvider) {
-        return deployRemoteCall(Mortgage.class, web3j, transactionManager, contractGasProvider, getBinary(), "");
+    public static RemoteCall<Mortgage> deploy(Web3j web3j, Credentials credentials, BigInteger gasPrice, BigInteger gasLimit, String add, BigInteger num) {
+        String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new org.fisco.bcos.web3j.abi.datatypes.Address(add), 
+                new org.fisco.bcos.web3j.abi.datatypes.generated.Int256(num)));
+        return deployRemoteCall(Mortgage.class, web3j, credentials, gasPrice, gasLimit, getBinary(), encodedConstructor);
     }
 
     @Deprecated
-    public static RemoteCall<Mortgage> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit) {
-        return deployRemoteCall(Mortgage.class, web3j, transactionManager, gasPrice, gasLimit, getBinary(), "");
+    public static RemoteCall<Mortgage> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger gasPrice, BigInteger gasLimit, String add, BigInteger num) {
+        String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new org.fisco.bcos.web3j.abi.datatypes.Address(add), 
+                new org.fisco.bcos.web3j.abi.datatypes.generated.Int256(num)));
+        return deployRemoteCall(Mortgage.class, web3j, transactionManager, gasPrice, gasLimit, getBinary(), encodedConstructor);
     }
 }

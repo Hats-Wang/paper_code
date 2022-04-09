@@ -15,6 +15,8 @@ contract Credit{
     bytes32[] _s;
     address[] signers;
     address public signersAddr;
+    address addBorrow;
+    address addMortgage;
     
         event addSignaturesEvent(int256 grd, string name, bool p, int256 vl, uint8 v, bytes32 r, bytes32 s);
         event newSignaturesEvent(int256 grd, string name, bool p, int256 vl, uint8 v, bytes32 r, bytes32 s,address addr);
@@ -32,6 +34,8 @@ contract Credit{
        if(CallVerify(sender))
        {
            grade = grd;
+           addBorrow = address(0);
+           addMortgage = address(0);
            companyName = name;
            pledge = p;
            value = vl;
@@ -48,14 +52,14 @@ contract Credit{
     }
 
 
-    function getCredit() public constant returns(int256,string,bool,int256,uint8[],bytes32[],bytes32[],address[]){
+    function getCredit() public constant returns(int256,string,bool,int256,uint8[],bytes32[],bytes32[],address[],address,address){
         uint length = CreditSignersDataABI(signersAddr).getSignersSize();
          address[] memory signerList = new address[](length);
          for(uint i= 0 ;i<length ;i++)
          {
              signerList[i] = (CreditSignersDataABI(signersAddr).getSigner(i));
          }
-        return(grade,companyName,pledge,value,_v,_r,_s,signerList);
+        return(grade,companyName,pledge,value,_v,_r,_s,signerList,addBorrow,addMortgage);
     }
 
     function addSignatures(uint8 v, bytes32 r, bytes32 s) public returns(bool) {
@@ -128,5 +132,21 @@ contract Credit{
 
     function setGrade(int256 grd)public{
         grade = grd;
+    }
+
+    function getAddBorrow()public returns (address){
+        return addBorrow;
+    }
+
+    function setAddBorrow(address add)public{
+        addBorrow = add;
+    }
+
+    function getAddMortgage()public returns (address){
+        return addMortgage;
+    }
+
+    function setAddMortgage(address add)public{
+        addMortgage = add;
     }
 }
