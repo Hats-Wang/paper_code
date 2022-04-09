@@ -1,4 +1,4 @@
-# paper usage
+# paper code usage
 
 ```
 gradle 6.6.1
@@ -25,23 +25,22 @@ deploy user.jks 123456 123456
 ```
 返回合约地址：
 ```
-deploy SignersData Contract success, address: 0x0f74e2529e561b2749034a3d235da8cf04ab8bea
-deploy Mortgage Contract success, address: 0xe9ed8526260796ee667e7217b239fdb357fcdfc5
+deploy SignersData Contract success, address: 0xf994b7effaf47d70719c42abf13e766ccb493651
 ```
 
 2.创建新公司信用参数： new  keyStoreFileName keyStorePassword keyPassword deployAddress grade companyName nameHash pledge companyValue 
 ```
-new user.jks 123456 123456 0x0f74e2529e561b2749034a3d235da8cf04ab8bea 90 com 0x4D236D9A2D102C5FE6AD1C50DA4BEC50 false 45689
+new user.jks 123456 123456 0xf994b7effaf47d70719c42abf13e766ccb493651 90 com 0x4D236D9A2D102C5FE6AD1C50DA4BEC50 false 45689
 ```
 返回credit地址：
 ```
-newCredit success, newCreditAddress: 0xf55b09f836195382cb3e254d5d5be63f9eae6110
+newCredit success, newCreditAddress: 0x3f5c7a991b7dd858a4d4fb796c1e8a4bdc51dcd8
 ```
 
 3. 发送签名参数： send keyStoreFileName keyStorePassword keyPassword newCreditAddress
 ```
-send arbitrator.jks 123456 123456 0xf55b09f836195382cb3e254d5d5be63f9eae6110
-send depositor.jks  123456 123456 0xf55b09f836195382cb3e254d5d5be63f9eae6110
+send arbitrator.jks 123456 123456 0x3f5c7a991b7dd858a4d4fb796c1e8a4bdc51dcd8
+send depositor.jks  123456 123456 0x3f5c7a991b7dd858a4d4fb796c1e8a4bdc51dcd8
 ```
 返回成功与否：
 ```
@@ -50,7 +49,7 @@ sendSignatureToBlockChain success！true / sendSignatureToBlockChain failed！fa
 
 4. 获取证据参数： get keyStoreFileName keyStorePassword keyPassword newCreditAddress
 ```
-get user.jks 123456 123456 0xf55b09f836195382cb3e254d5d5be63f9eae6110
+get user.jks 123456 123456 0x3f5c7a991b7dd858a4d4fb796c1e8a4bdc51dcd8
 ```
 返回公司信贷信息：
 ```
@@ -68,7 +67,7 @@ the publicKey[2]: 0x5a6c7ccf9efa702f4e8888ff7e8a3310abcf8c51
 
 5. 证据和签名校验参数： verify keyStoreFileName keyStorePassword keyPassword newCreditAddress
 ```
-verify user.jks 123456 123456 0xf55b09f836195382cb3e254d5d5be63f9eae6110
+verify user.jks 123456 123456 0x3f5c7a991b7dd858a4d4fb796c1e8a4bdc51dcd8
 ```
 返回验证是否成功：
 ```
@@ -84,17 +83,21 @@ getPublicKey user.jks 123456 123456
 publicKey:0x33674063c4618f4773fac75dc2f07e55f6f391ce
 ```
 
-7. 抵押公司参数： mortgage keyStoreFileName keyStorePassword keyPassword newCreditAddress MortgageAddress loan_num 
+7. 公司贷款参数： borrow 私钥文件名 keyStorePassword keyPassword newCredit返回地址 time loan_num
 ```
-mortgage user.jks 123456 123456 0xf55b09f836195382cb3e254d5d5be63f9eae6110  0xe9ed8526260796ee667e7217b239fdb357fcdfc5 99
+borrow user.jks 123456 123456 0x3f5c7a991b7dd858a4d4fb796c1e8a4bdc51dcd8 60 60
 ```
 返回公司是否抵押成功:
 ```
-company is mortgageed successfully! / company is mortgaged abortively!
+Company borrow money successfully! / Company failed to borrow money!
 ```
 
-8. 赎回公司
-redeem keyStoreFileName keyStorePassword keyPassword newCreditAddress MortgageAddress
+8. 公司偿还贷款
+payback 私钥文件名 keyStorePassword keyPassword newCredit返回地址
 ```
-redeem user.jks 123456 123456 0xf55b09f836195382cb3e254d5d5be63f9eae6110  0xe9ed8526260796ee667e7217b239fdb357fcdfc5
+payback user.jks 123456 123456 0x3f5c7a991b7dd858a4d4fb796c1e8a4bdc51dcd8
+```
+返回公司是否还款成功:
+```
+Company payback successfully! / Company failed to payback!
 ```
