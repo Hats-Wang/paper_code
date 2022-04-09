@@ -22,10 +22,10 @@ public class Main {
             System.exit(0);
         }
         while(true) {
+            System.out.println("\n\n");
             BufferedReader scanner = new BufferedReader(new InputStreamReader(System.in));
             String str = scanner.readLine();
             String[] arg = str.split("\\s+");
-            for (int i = 0; i < arg.length; i++) System.out.println(arg[i]);
 
             switch (arg[0]) {
                 //deploy
@@ -64,6 +64,8 @@ public class Main {
                     System.out.println("the CompanyValue: " + creditData.getCompanyValue());
                     if (creditData.getPledge()) {
                         System.out.println("the Company is pledged.");
+                        System.out.println("the borrow contract address:" + creditData.getAddBorrow());
+                        System.out.println("the mortgage contract address:" + creditData.getAddMortgage());
                     } else {
                         System.out.println("the Company is not pledged.");
                     }
@@ -97,6 +99,15 @@ public class Main {
                         System.out.println("Company borrow money successfully!");
                     else
                         System.out.println("Company failed to borrow money!");
+                    break;
+
+                case "payback":
+                    //传入参数为1.私钥文件名 2.keyStorePassword 3.keyPassword 4.newCredit返回地址
+                    Boolean ok2 = app.payBack(arg[1],arg[2],arg[3],arg[4]);
+                    if(ok2)
+                        System.out.println("Company payback successfully!");
+                    else
+                        System.out.println("Company failed to payback!");
                     break;
 
                 case "getPublicKey":

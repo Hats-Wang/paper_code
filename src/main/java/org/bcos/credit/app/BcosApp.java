@@ -10,8 +10,7 @@ import java.security.SignatureException;
 import java.security.interfaces.ECPrivateKey;
 import java.util.*;
 
-import org.bcos.credit.web3j.Borrow;
-import org.bcos.credit.web3j.Mortgage;
+import org.bcos.credit.web3j.*;
 import org.fisco.bcos.channel.client.Service;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -19,8 +18,6 @@ import java.util.stream.Collectors;
 import org.bcos.credit.sample.CreditData;
 import org.bcos.credit.sample.PublicAddressConf;
 import org.bcos.credit.util.Tools;
-import org.bcos.credit.web3j.Credit;
-import org.bcos.credit.web3j.CreditSignersData;
 import org.fisco.bcos.web3j.tuples.generated.Tuple10;
 import org.fisco.bcos.web3j.tx.gas.StaticGasProvider;
 import org.springframework.context.ApplicationContext;
@@ -312,6 +309,7 @@ public class BcosApp {
 		if(credentials==null){
 			return false;
 		}
+
 		try{
 			Borrow borrow = Borrow.deploy(web3j,credentials,new StaticGasProvider(gasPrice, gasLimited),add,new BigInteger(time),new BigInteger(loan_num)).send();
 	        Boolean suc = borrow.getFlag().send();
@@ -325,6 +323,24 @@ public class BcosApp {
 		} catch (Exception e) {
 			e.printStackTrace();
 	    }
+		return true;
+	}
+
+	public Boolean payBack(String keyStoreFileName,String keyStorePassword, String keyPassword, String add) {
+		if (web3j == null )
+			return false;
+		Credentials credentials=loadkey(keyStoreFileName,keyStorePassword,keyPassword);
+		if(credentials==null){
+			return false;
+		}
+
+		try{
+			PayBack payback = PayBack.deploy(web3j,credentials,new StaticGasProvider(gasPrice, gasLimited),add).send();
+			if(payback == null)
+				return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return true;
 	}
 }
