@@ -36,6 +36,18 @@ public class Main {
         Boolean ok = app.borrowMoney("user.jks", "123456", "123456", add, time, num);
         return ok;
     }
+
+    public Boolean Payback(String add){
+        Boolean ok = app.payBack("user.jks", "123456", "123456", add);
+        return ok;
+    }
+
+    public CreditData Get(String add) throws Exception {
+        CreditData creditData = app.getCredit("user.jks", "123456", "123456", add);
+        return creditData;
+    }
+
+
     public static void main(String[] args) throws Exception {
         boolean configure = app.loadConfig();
         Address newCreditAddress = null;
