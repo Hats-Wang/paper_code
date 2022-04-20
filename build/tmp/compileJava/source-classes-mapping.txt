@@ -26,6 +26,8 @@ org/bcos/credit/web3j/CreditSignersData.java
  org.bcos.credit.web3j.CreditSignersData$8
  org.bcos.credit.web3j.CreditSignersData$9
  org.bcos.credit.web3j.CreditSignersData$NewCreditEventEventResponse
+org/bcos/credit/app/BreakThread.java
+ org.bcos.credit.app.BreakThread
 org/bcos/credit/util/Tools.java
  org.bcos.credit.util.Tools
 org/bcos/credit/web3j/Borrow.java
@@ -119,7 +121,5 @@ org/bcos/credit/web3j/Credit.java
  org.bcos.credit.web3j.Credit$NewSignaturesEventEventResponse
 org/bcos/credit/app/Main.java
  org.bcos.credit.app.Main
-org/bcos/credit/app/BreakThread.java
- org.bcos.credit.app.BreakThread
 org/bcos/credit/app/BcosApp.java
  org.bcos.credit.app.BcosApp

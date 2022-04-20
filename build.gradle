@@ -52,7 +52,7 @@ dependencies {
     implementation log4j, jaxb, jackson
 
     implementation("org.fisco-bcos:web3sdk:2.6.4")
-
+	implementation("org.directwebremoting:dwr:3.0.1-RELEASE")
 }
 
 configurations {

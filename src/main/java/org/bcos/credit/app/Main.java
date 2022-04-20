@@ -3,19 +3,42 @@ package org.bcos.credit.app;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.util.List;
 import org.bcos.credit.sample.CreditData;
 import org.fisco.bcos.web3j.abi.datatypes.Address;
 
+import static org.bcos.credit.app.BcosApp.byteArrayToHex;
 
 
 public class Main {
+    private static BcosApp app = new BcosApp();
 
 
-    public static void main(String[] args) throws Exception {
-        BcosApp app = new BcosApp();
-        Address newCreditAddress = null;
+    public Address Deploy() throws Exception {
         boolean configure = app.loadConfig();
+        Address add = app.deployContract("user.jks", "123456", "123456");
+        return add;
+    }
+
+    public Address NewCredit(String add, String grade, String name, String pledge, String value) throws Exception{
+        Address newCreditAddress = null;
+        MessageDigest messageDigest =MessageDigest.getInstance("MD5");
+        messageDigest.update(name.getBytes());
+        byte[] resultByteArray = messageDigest.digest();
+        String nameHash = "0x" + byteArrayToHex(resultByteArray);
+
+        newCreditAddress = app.newCredit("user.jks", "123456", "123456", add, grade, name, nameHash, new Boolean(pledge), new BigInteger(value));
+        return newCreditAddress;
+    }
+
+    public Boolean borrow(String add, String time, String num){
+        Boolean ok = app.borrowMoney("user.jks", "123456", "123456", add, time, num);
+        return ok;
+    }
+    public static void main(String[] args) throws Exception {
+        boolean configure = app.loadConfig();
+        Address newCreditAddress = null;
 
         if (!configure) {
             System.err.println("error in load configure, init failed !!!");
@@ -46,7 +69,7 @@ public class Main {
                     //1.私钥文件名 2.keyStorePassword 3.keyPassword 4.newCreditAddress
                     //通过证据地址获取证据信息
                     CreditData creditData2 = app.getCredit(arg[1], arg[2], arg[3], arg[4]);
-                   
+
                     boolean flag = app.sendSignatureToBlockChain(arg, creditData2.getNameHash());
                     if (flag) {
                         System.out.println("-----------sendSignatureToBlockChain success！" + flag);
