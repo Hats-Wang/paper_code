@@ -24,11 +24,9 @@ public class BorrowServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
 
-        resp.setContentType("text/html");
-        PrintWriter pw = resp.getWriter();
-        if(ok) pw.write("success");
-        else pw.write("fail");
 
-        pw.flush();
+        if(ok) req.getRequestDispatcher("success.html").forward(req, resp);
+        else req.getRequestDispatcher("fail.html").forward(req, resp);
+
     }
 }

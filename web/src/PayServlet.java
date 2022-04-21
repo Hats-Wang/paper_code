@@ -18,12 +18,9 @@ public class PayServlet extends HttpServlet {
 
         ok = m.Payback(add);
 
-        resp.setContentType("text/html");
-        PrintWriter pw = resp.getWriter();
-        if(ok) pw.write("success");
-        else pw.write("fail");
+        if(ok) req.getRequestDispatcher("success.html").forward(req, resp);
+        else req.getRequestDispatcher("fail.html").forward(req, resp);
 
-        pw.flush();
     }
 
 }
