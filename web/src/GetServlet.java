@@ -22,9 +22,9 @@ public class GetServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
 
-        resp.setContentType("text/html;charset=utf-8");
+        resp.setContentType("text/html;charset=utf-8;");
         PrintWriter pw = resp.getWriter();
-        pw.write("<head>\n <title>Title</title>\n </head>\n<style>\n body{\n" +
+        pw.write("<head>\n <title>企业征信数据</title>\n </head>\n<style>\n body{\n" +
                 "      background: url(\"./picture/company.jpg\")center no-repeat;\n" +
                 "      background-size:100%,100%;\n" +
                 "    }\n div {margin:8cm 10cm 5cm 15cm;}\n p {display:inline;}\n</style>\n<body>\n<div>\n" +

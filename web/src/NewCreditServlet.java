@@ -26,10 +26,29 @@ public class NewCreditServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
 
-        resp.setContentType("text/html");
+        resp.setContentType("text/html;charset=utf-8;");
         PrintWriter pw = resp.getWriter();
 
-        pw.write("create success" + newCreditAddress.toString());
+        pw.write("<head>\n" +
+                "    <title>企业征信地址</title>\n" +
+                "</head>\n" +
+                "\n" +
+                "<style>\n" +
+                "    body{\n" +
+                "        background: url(\"./picture/back.jpg\")center no-repeat;\n" +
+                "        background-size:100%,100%;\n" +
+                "    }\n" +
+                "    div{\n" +
+                "        margin:10cm 3cm 8cm 3cm;\n" +
+                "    }\n" +
+                "</style>\n" +
+                "\n" +
+                "<body>\n" +
+                "<div>\n" +
+                "    <p style=\"font-size:40px;\"><b>企业征信地址：</b> " + newCreditAddress.toString() + "</p><br>\n" +
+                "</div>\n" +
+                "</body>");
+
         pw.flush();
     }
 }

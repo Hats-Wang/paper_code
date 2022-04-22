@@ -5,8 +5,8 @@ org/bcos/credit/web3j/Mortgage.java
  org.bcos.credit.web3j.Mortgage$1
 org/bcos/credit/web3j/PayBack.java
  org.bcos.credit.web3j.PayBack
-org/bcos/credit/sample/PublicAddressConf.java
- org.bcos.credit.sample.PublicAddressConf
+org/bcos/credit/app/Main.java
+ org.bcos.credit.app.Main
 org/bcos/credit/sample/CreditData.java
  org.bcos.credit.sample.CreditData
 org/bcos/credit/web3j/CreditSignersData.java
@@ -30,11 +30,8 @@ org/bcos/credit/app/BreakThread.java
  org.bcos.credit.app.BreakThread
 org/bcos/credit/util/Tools.java
  org.bcos.credit.util.Tools
-org/bcos/credit/web3j/Borrow.java
- org.bcos.credit.web3j.Borrow
- org.bcos.credit.web3j.Borrow$1
- org.bcos.credit.web3j.Borrow$2
- org.bcos.credit.web3j.Borrow$3
+org/bcos/credit/app/BcosApp.java
+ org.bcos.credit.app.BcosApp
 org/bcos/credit/web3j/Credit.java
  org.bcos.credit.web3j.Credit
  org.bcos.credit.web3j.Credit$1
@@ -119,7 +116,10 @@ org/bcos/credit/web3j/Credit.java
  org.bcos.credit.web3j.Credit$ErrorNewSignaturesEventEventResponse
  org.bcos.credit.web3j.Credit$ErrorRepeatSignaturesEventEventResponse
  org.bcos.credit.web3j.Credit$NewSignaturesEventEventResponse
-org/bcos/credit/app/BcosApp.java
- org.bcos.credit.app.BcosApp
-org/bcos/credit/app/Main.java
- org.bcos.credit.app.Main
+org/bcos/credit/web3j/Borrow.java
+ org.bcos.credit.web3j.Borrow
+ org.bcos.credit.web3j.Borrow$1
+ org.bcos.credit.web3j.Borrow$2
+ org.bcos.credit.web3j.Borrow$3
+org/bcos/credit/sample/PublicAddressConf.java
+ org.bcos.credit.sample.PublicAddressConf

@@ -26,7 +26,7 @@
 
 
   <body>
-  <img src="./picture/big.png" height="60" width="60">
+  <img src="./picture/big.png" height="100" width="100">
 
   <div>
   <form action="/deploy" method="get">
