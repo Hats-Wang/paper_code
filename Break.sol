@@ -9,7 +9,9 @@ contract Break{
          Borrow b = Borrow(cre.getAddBorrow());
          if(b.getFlag()) {
              int256 grd = cre.getGrade();
-             cre.setGrade(grd - 5);
+             if(grd >= 5){
+                 cre.setGrade(grd - 5);
+             }
              b.setFlag(false);
          }
      }

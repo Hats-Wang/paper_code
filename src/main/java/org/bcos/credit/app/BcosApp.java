@@ -41,6 +41,8 @@ public class BcosApp {
 	public static BigInteger gasPrice = new BigInteger("99999999999");
 	public static BigInteger gasLimited = new BigInteger("9999999999999");
 
+	private HashMap<String, BreakThread> hash = new HashMap<>();
+
 	public BcosApp() {
         creditSignersData =null;
 		web3j = null;
@@ -315,6 +317,7 @@ public class BcosApp {
 	        Boolean suc = borrow.getFlag().send();
 			if(suc) {
 				BreakThread br = new BreakThread(web3j, credentials, add, time);
+				hash.put(borrow.toString(), br);
 				br.start();
 				return true;
 			}
@@ -333,14 +336,18 @@ public class BcosApp {
 		if(credentials==null){
 			return false;
 		}
-
+		Credit cre = null;
 		try{
 			PayBack payback = PayBack.deploy(web3j,credentials,new StaticGasProvider(gasPrice, gasLimited),add).send();
+			cre = Credit.load(add, web3j, credentials,new StaticGasProvider(gasPrice, gasLimited));
 			if(payback == null)
 				return false;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		BreakThread brt = hash.get(cre.getAddBorrowSeq());
+		hash.remove(cre.getAddBorrowSeq());
+		brt.interrupt();
 		return true;
 	}
 }

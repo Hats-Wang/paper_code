@@ -9,6 +9,7 @@ contract Borrow{
     int256 money;
     bool flag;//表示借贷是否还能影响credit grade
 
+
     function Borrow(address add, int256 time, int256 num) public{
         cre = Credit(add);
         month = time;

@@ -30,35 +30,35 @@
 
   <div>
   <form action="/deploy" method="get">
-    <button>
+    <button style="font-size: 30px;width:200px;">
       <img src="./picture/deploy.png" height="80" width="80"><br>
       获取接口地址
     </button>
   </form><br>
 
   <a href="http://127.0.0.1:8081/new.html">
-    <button>
+    <button style="font-size: 30px;width:200px;">
       <img src="./picture/new.png" height="80" width="80"><br>
       注册信用信息
     </button>
   </a><br><br>
 
   <a href="http://127.0.0.1:8081/borrow.html">
-    <button>
+    <button style="font-size: 30px;width:200px;">
       <img src="./picture/borrow.png" height="80" width="80"><br>
       申请贷款
     </button>
   </a><br><br>
 
   <a href="http://127.0.0.1:8081/pay.html">
-    <button>
+    <button style="font-size: 30px;width:200px;">
       <img src="./picture/pay.png" height="80" width="80"><br>
       偿还贷款
     </button>
   </a><br><br>
 
   <a href="http://127.0.0.1:8081/get.html">
-    <button>
+    <button style="font-size: 30px;width:200px;">
       <img src="./picture/get.png" height="80" width="80"><br>
       查询信用信息
     </button>

@@ -24,13 +24,22 @@ public class BreakThread extends Thread{
     }
 
     public void run() {
+
+        try{
+            //System.out.println("Start to Sleep" + new Long(String.valueOf(time)));
+            sleep(new Long(String.valueOf(time)));
+        } catch (InterruptedException e) {
+            return ;
+        }
+        
         try{
             //System.out.println("Start to Sleep" + new Long(String.valueOf(time)));
             sleep(new Long(String.valueOf(time)));
             Break b = Break.deploy(web3j, credentials, new StaticGasProvider(gasPrice, gasLimited),add).send();
         } catch (Exception e) {
-            e.printStackTrace();
+
         }
+
 
     }
 }
